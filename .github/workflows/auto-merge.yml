@@ -19,17 +19,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Check if PR is from Dependabot
+      # Install GitHub CLI
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
+      # Verify PR author is Dependabot
       - name: Verify PR author is Dependabot
         id: check_author
         run: |
-          echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
-          echo "DEPENDABOT=dependabot[bot]" >> $GITHUB_ENV
+          echo "::set-output name=pr_author::${{ github.event.pull_request.user.login }}"
+          echo "::set-output name=dependabot::dependabot[bot]"
 
-      # Merge the PR if it's from Dependabot and meets branch protection rules
+      # Auto-merge Dependabot PR
       - name: Auto-merge Dependabot PR
-        if: env.PR_AUTHOR == env.DEPENDABOT
+        if: steps.check_author.outputs.pr_author == steps.check_author.outputs.dependabot
         run: |
-          gh pr merge ${{ github.event.pull_request.number }} --merge --admin
+          if ! gh pr merge ${{ github.event.pull_request.number }} --merge --admin; then
+            echo "Failed to merge PR. Check permissions or branch protection rules."
+            exit 1
+          fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
