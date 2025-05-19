@@ -124,7 +124,7 @@ sentencepiece==0.1.96
 sentry-sdk==2.8.0
 seqeval==1.2.2
 setproctitle==1.2.3
-setuptools==70.0.0
+setuptools==78.1.1
 shortuuid==1.0.9
 simpletransformers==0.63.7
 six==1.16.0
