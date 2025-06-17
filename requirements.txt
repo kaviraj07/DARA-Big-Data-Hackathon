@@ -89,7 +89,7 @@ plotly==5.9.0
 prometheus-client==0.13.1
 promise==2.3
 prompt-toolkit==3.0.20
-protobuf==3.19.5
+protobuf==4.25.8
 psutil==5.9.1
 pure-eval==0.2.2
 pyarrow==14.0.1
